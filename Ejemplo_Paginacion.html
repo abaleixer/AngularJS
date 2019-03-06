@@ -1,0 +1,62 @@
+<!doctype html>
+<html ng-app="todoApp">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js"></script>
+
+    <script>
+        //ALEIXER ALVARADO BERNAL Marzo 6, 2019
+        //Ejemplo Angular paginacion
+        angular.module('todoApp', [])
+            .controller('lista', function () {
+                var todoList = this;
+
+                todoList.listaFiltrada = [];  //Array que contendra la lista filtrada             
+                todoList.listaDummy = crearListaDummy();
+                todoList.indexs = 0; //Indica cuantos de la lista se muestran
+                filtrarLinea(-1); // Inicia los primeros de la lista
+
+                //Crea la lista dummy solo es para el ejemplo, ESTO SE REMPLAZA POR LA LISTA ORIGINAL
+                function crearListaDummy() {
+                    var c = [];
+                    for (var i = 0; i < 100; i++) {
+                        c.push({ text: 'AUDI ' + i, done: true });
+                    }
+                    return c
+                };
+
+                //Filtra el array original y extrae la lista de la pagina a mostrar
+                function filtrarLinea(ind) {
+                    if (ind == '1' && todoList.indexs + 5 < todoList.listaDummy.length) {
+                        todoList.indexs += 5;
+                    } else if (ind == '0' && todoList.indexs > 4) {
+                        todoList.indexs -= 5;
+                    }
+                    var fin = todoList.indexs + 5;
+                    todoList.listaFiltrada = todoList.listaDummy.slice(todoList.indexs, fin)
+                }
+
+                //ejecuta según el botón
+                todoList.filtrar = function (ind) {
+                    filtrarLinea(ind);
+                };
+            });
+
+    </script>
+</head>
+
+<body ng-controller="lista as todoList">
+    <div>
+
+        ================= BEGIN Lista Filtrada =============================
+        <div ng-repeat="todo in todoList.listaFiltrada">
+            {{todo.text}}
+        </div>
+        ================= END Lista Filtrada =============================
+    </div>
+    <button ng-click="todoList.filtrar('0')"> Anterior </button>
+    <button ng-click="todoList.filtrar('1')"> Siguiente </button>
+
+</body>
+
+</html>
